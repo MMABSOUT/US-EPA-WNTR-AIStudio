@@ -70,9 +70,6 @@ coverage.xml
 # Mac cleanup
 **/.DS_Store
 
-node_modules/
-dist/
-
 # Other items / test output
 temp*
 *.pyd
