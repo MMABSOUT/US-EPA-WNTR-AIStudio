@@ -46,15 +46,18 @@ export const TimeController: React.FC<TimeControllerProps> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={() => onStepChange(Math.max(0, currentStepIndex - 1))}
+          disabled={currentStepIndex === 0}
+          aria-label="Previous Timestep"
           title="Previous Timestep"
-          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
         >
           <SkipBack className="w-4 h-4" />
         </button>
 
         <button
           onClick={onTogglePlay}
-          className={`px-4 py-2 rounded-lg font-semibold text-xs flex items-center gap-1.5 transition-all shadow-md ${
+          aria-label={isPlaying ? 'Pause timeline simulation' : 'Start timeline simulation'}
+          className={`px-4 py-2 rounded-lg font-semibold text-xs flex items-center gap-1.5 transition-all shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
             isPlaying
               ? 'bg-amber-600 hover:bg-amber-500 text-white'
               : 'bg-cyan-600 hover:bg-cyan-500 text-white'
@@ -73,14 +76,19 @@ export const TimeController: React.FC<TimeControllerProps> = ({
 
         <button
           onClick={() => onStepChange((currentStepIndex + 1) % totalSteps)}
+          aria-label="Next Timestep"
           title="Next Timestep"
-          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition"
+          className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
         >
           <SkipForward className="w-4 h-4" />
         </button>
 
         {/* Speed toggle */}
-        <div className="flex items-center gap-1 ml-2 bg-slate-800/80 p-1 rounded-lg text-xs">
+        <div
+          className="flex items-center gap-1 ml-2 bg-slate-800/80 p-1 rounded-lg text-xs"
+          role="group"
+          aria-label="Playback speed controls"
+        >
           {[
             { label: '1x', delay: 1000 },
             { label: '2x', delay: 500 },
@@ -89,7 +97,9 @@ export const TimeController: React.FC<TimeControllerProps> = ({
             <button
               key={spd.label}
               onClick={() => setPlaySpeed(spd.delay)}
-              className={`px-2 py-0.5 rounded text-[11px] font-medium transition ${
+              aria-label={`Set speed to ${spd.label}`}
+              aria-pressed={playSpeed === spd.delay}
+              className={`px-2 py-0.5 rounded text-[11px] font-medium transition focus:outline-none focus-visible:ring-1 focus-visible:ring-cyan-400 ${
                 playSpeed === spd.delay
                   ? 'bg-cyan-500/30 text-cyan-300'
                   : 'text-slate-400 hover:text-slate-200'
@@ -112,7 +122,9 @@ export const TimeController: React.FC<TimeControllerProps> = ({
           max={totalSteps - 1}
           value={currentStepIndex}
           onChange={(e) => onStepChange(Number(e.target.value))}
-          className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none"
+          aria-label="Timeline step slider"
+          aria-valuetext={`Hour ${currentHours}`}
+          className="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
         />
         <span className="text-xs font-mono text-slate-400 min-w-[55px]">
           Hr {Math.floor(((totalSteps - 1) * timestepSeconds) / 3600)}
